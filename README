@@ -1,0 +1,111 @@
+DugScript v1.0
+File Extension: .ds
+
+Description:
+Interpreted language to brush up on Java skills
+
+Notes:
+	I started the project on 15 Feb 2022, and got a functioning 1.0 on
+	5 Apr. I spent ~1hr a day class time working on it
+	(not accounting for 7-3 days). So, the maximum amount of time it took
+	me to write the interpreter for this was 50 hours (but is actually less)
+
+Language Specification:
+Reverse Polish Notation for everything
+	https://en.wikipedia.org/wiki/Reverse_Polish_notation	
+	thing1 thing2 operator -> result
+Input separated with spaces
+Function returns just flat, no brackets or anything
+
+Variable setting:
+	foo 3 1 + set => foo is now representing the number four
+	Updates by setting it again
+
+Arrays:
+	foo 1,2,3 set => foo now representing an array
+	0-based
+	Accessed as foo[0]
+	Added to like so:
+	      foo foo ,4 concat set => foo is now 1,2,3,4
+	Updated like so:
+		foo[0] 2 set => foo is now 2,2,3,4
+	
+Variable naming:
+	 Can't be just a number
+	 Can't be a keyword
+	 Can't be an operator
+
+Strings:
+	Declared with single quotes (or not, if they don't need spaces)
+		 Like sh or rc
+	No formatting, just concat them
+	No escapes (yet)
+	Splitting on spaces has "s" as the split delimiter (might work in tabs
+	with "t")
+
+Split:
+	Returns array
+	Regex-based, so you'll need to escape any regex metacharacters
+	Splitting on spaces has "s" as the split delimiter
+	Ex: 'foo@bar' @ split
+
+Replace:
+	Returns string
+	Also regex-based, so more metacharacter escaping
+	Global replace on the string
+	Ex: 'foo bar' f o replace => 'ooo bar'
+
+Booleans:
+	"t" will denote true
+	"f" will denote false
+
+Functions:
+	Created like so:
+		'body (in quotes)' param1,param2 funcname defun
+	Called like any other function
+
+File I/O:
+     Read file into a string (the entire file, no iterating over lines)
+     	   Ex: f ~/foo read => f is now the contents of ~/foo
+     Write a string into a file
+     	   Ex: f ~/foo write => writes contents of f to file
+
+For Loop:
+	Foreach loop only
+	"loc" is the equivalent of the Perl "$_" (the "that thing" operator)
+	Ex: 'foo,bar,baz' 'o a replace' for => faa,bar,baz
+
+If/Else:
+	Done exclusively through the ternary operator
+	Ex: 1 2 < ? 'foo' print : 'bar' print ; => prints foo
+
+System Calls:
+       Returns a variable with the stdout of the syscall made
+       Done like so:
+       	    f 'syscall here' sys => f now contains the stdout of the syscall
+
+Keywords:
+	set
+	All of the operators (*, -, +, /, %, <, >, <=, >=, ==, !=, ?, :, ;)
+	split
+	concat
+	replace
+	sys
+	print
+	read
+	write
+	loc
+	for
+	quit
+	defun
+
+Escaping:
+	When dealing with string splitting, one may need to use an operator
+	or keyword. In this instance, escape the word/operator with a backslash
+	Ex: foo+bar \+ split => foo,bar
+
+General Structure:
+	Evaluated line-by-line, there are no multi-line structures
+	Comments are lines that begin with a "#", the entire line is ignored
+
+Issues:
